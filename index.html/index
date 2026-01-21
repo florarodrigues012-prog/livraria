@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraria em Suas Mãos</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="assets/img/logo.png" width="40">
+        <h2>Livraria em Suas Mãos</h2>
+    </div>
+    <nav>
+        <a href="categorias.html">Categorias</a>
+        <a href="carrinho.html">Carrinho</a>
+        <a href="contacto.html">Contacto</a>
+    </nav>
+</header>
+
+<section class="banner">
+    <h1>Bem-vindo à Livraria em Suas Mãos</h1>
+    <p>Livros físicos e digitais enviados para Europa, América do Norte e América do Sul.</p>
+</section>
+
+<section class="destaques">
+    <h2>Destaques</h2>
+    <div id="lista-destaques" class="produtos-container"></div>
+</section>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

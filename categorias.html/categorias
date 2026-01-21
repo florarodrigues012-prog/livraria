@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias - Livraria</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="assets/img/logo.png" width="40">
+        <h2>Livraria em Suas Mãos</h2>
+    </div>
+</header>
+
+<h2>Categorias</h2>
+<ul>
+    <li>Romance</li>
+    <li>Suspense</li>
+    <li>Autoajuda</li>
+    <li>Espiritualidade</li>
+    <li>Didáticos</li>
+</ul>
+
+</body>
+</html>
