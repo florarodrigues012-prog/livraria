@@ -1,28 +1,487 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorias - Livraria</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorias - Livraria em Suas Mãos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: #F5F5F5;
+      color: #333333;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #F8F6F0 0%, #E6E2D3 100%);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-bottom: 1px solid #E8E8E8;
+    }
+
+    .logo-container {
+      max-width: 200px;
+      margin: 0 auto 15px;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2em;
+      color: #333333;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    nav {
+      background: #FFFFFF;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-bottom: 1px solid #E8E8E8;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    nav ul li a {
+      color: #666666;
+      text-decoration: none;
+      font-weight: 400;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-size: 0.95em;
+    }
+
+    nav ul li a:hover {
+      background: #F8F6F0;
+      color: #333333;
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    .intro {
+      background: #FFFFFF;
+      padding: 35px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #E8E8E8;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333333;
+      margin-bottom: 15px;
+      font-size: 1.8em;
+      font-weight: 400;
+    }
+
+    .intro p {
+      color: #666666;
+      font-size: 1.05em;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .category-card {
+      background: #FFFFFF;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #E8E8E8;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .category-header {
+      background: linear-gradient(135deg, #F8F6F0 0%, #E6E2D3 100%);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid #E8E8E8;
+    }
+
+    .category-icon {
+      font-size: 3.5em;
+      margin-bottom: 15px;
+    }
+
+    .category-name {
+      font-size: 1.4em;
+      font-weight: 500;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .category-body {
+      padding: 25px;
+    }
+
+    .category-description {
+      color: #666666;
+      font-size: 0.95em;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .category-count {
+      color: #999999;
+      font-size: 0.85em;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
+    .explore-btn {
+      width: 100%;
+      padding: 12px;
+      background: #666666;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.95em;
+    }
+
+    .explore-btn:hover {
+      background: #333333;
+    }
+
+    .featured-section {
+      background: #F8F6F0;
+      padding: 35px;
+      border-radius: 6px;
+      margin-top: 50px;
+      border: 1px solid #E6E2D3;
+      text-align: center;
+    }
+
+    .featured-section h3 {
+      color: #333333;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      font-weight: 400;
+    }
+
+    .featured-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .tag {
+      background: #FFFFFF;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #666666;
+      border: 1px solid #CCCCCC;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+    }
+
+    .tag:hover {
+      background: #E6E2D3;
+      border-color: #999999;
+      color: #333333;
+    }
+
+    footer {
+      background: #F8F6F0;
+      color: #666666;
+      text-align: center;
+      padding: 35px 20px;
+      margin-top: 50px;
+      border-top: 1px solid #E6E2D3;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #666666;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-size: 0.95em;
+    }
+
+    .footer-links a:hover {
+      color: #333333;
+    }
+
+    @media (max-width: 768px) {
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+      header h1 {
+        font-size: 1.6em;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<header>
-    <div class="logo">
-        <img src="assets/img/logo.png" width="40">
-        <h2>Livraria em Suas Mãos</h2>
+  <header>
+    <div class="logo-container">
+      <img src="https://i.postimg.cc/MKkNnH3m/logo-livraria.png" alt="Livraria em Suas Mãos">
     </div>
-</header>
+    <h1>Explorar Categorias</h1>
+  </header>
 
-<h2>Categorias</h2>
-<ul>
-    <li>Romance</li>
-    <li>Suspense</li>
-    <li>Autoajuda</li>
-    <li>Espiritualidade</li>
-    <li>Didáticos</li>
-</ul>
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="carrinho.html">Carrinho</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="contacto.html">Contato</a></li>
+    </ul>
+  </nav>
 
+  <main>
+    <div class="intro">
+      <h2>Descubra Seu Próximo Livro Favorito</h2>
+      <p>Navegue por nossas categorias cuidadosamente selecionadas e encontre títulos que combinam com você</p>
+    </div>
+
+    <div class="categories-grid">
+      <!-- Ficção -->
+      <div class="category-card" onclick="searchCategory('fiction')">
+        <div class="category-header">
+          <div class="category-icon">📖</div>
+          <div class="category-name">Ficção</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Mundos imaginários, personagens inesquecíveis e histórias que prendem do início ao fim.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Ficção</button>
+        </div>
+      </div>
+
+      <!-- Não-Ficção -->
+      <div class="category-card" onclick="searchCategory('nonfiction')">
+        <div class="category-header">
+          <div class="category-icon">📰</div>
+          <div class="category-name">Não-Ficção</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Histórias reais, biografias inspiradoras e conhecimento baseado em fatos.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Não-Ficção</button>
+        </div>
+      </div>
+
+      <!-- Infantojuvenil -->
+      <div class="category-card" onclick="searchCategory('children')">
+        <div class="category-header">
+          <div class="category-icon">🧒</div>
+          <div class="category-name">Infantojuvenil</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Aventuras mágicas e aprendizado para os pequenos leitores de todas as idades.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Infantojuvenil</button>
+        </div>
+      </div>
+
+      <!-- Romance -->
+      <div class="category-card" onclick="searchCategory('romance')">
+        <div class="category-header">
+          <div class="category-icon">💕</div>
+          <div class="category-name">Romance</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Histórias de amor que emocionam, desde clássicos até contemporâneos.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Romance</button>
+        </div>
+      </div>
+
+      <!-- Terror -->
+      <div class="category-card" onclick="searchCategory('horror')">
+        <div class="category-header">
+          <div class="category-icon">👻</div>
+          <div class="category-name">Terror</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Suspense arrepiante e mistérios sombrios para os amantes do medo.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Terror</button>
+        </div>
+      </div>
+
+      <!-- Negócios -->
+      <div class="category-card" onclick="searchCategory('business')">
+        <div class="category-header">
+          <div class="category-icon">💼</div>
+          <div class="category-name">Negócios</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Estratégias, empreendedorismo e desenvolvimento profissional.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Negócios</button>
+        </div>
+      </div>
+
+      <!-- Educação -->
+      <div class="category-card" onclick="searchCategory('education')">
+        <div class="category-header">
+          <div class="category-icon">🎓</div>
+          <div class="category-name">Educação</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Materiais didáticos, metodologias e recursos para aprendizado.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Educação</button>
+        </div>
+      </div>
+
+      <!-- HQ e Mangá -->
+      <div class="category-card" onclick="searchCategory('comics')">
+        <div class="category-header">
+          <div class="category-icon">🎨</div>
+          <div class="category-name">HQ e Mangá</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Quadrinhos, graphic novels e mangás de todos os gêneros.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar HQ/Mangá</button>
+        </div>
+      </div>
+
+      <!-- Ciência -->
+      <div class="category-card" onclick="searchCategory('science')">
+        <div class="category-header">
+          <div class="category-icon">🔬</div>
+          <div class="category-name">Ciência</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Descobertas científicas, tecnologia e o fascinante mundo da ciência.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Ciência</button>
+        </div>
+      </div>
+
+      <!-- História -->
+      <div class="category-card" onclick="searchCategory('history')">
+        <div class="category-header">
+          <div class="category-icon">📜</div>
+          <div class="category-name">História</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Viaje no tempo através de eventos, civilizações e personagens históricos.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar História</button>
+        </div>
+      </div>
+
+      <!-- Biografia -->
+      <div class="category-card" onclick="searchCategory('biography')">
+        <div class="category-header">
+          <div class="category-icon">👤</div>
+          <div class="category-name">Biografia</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Vidas inspiradoras de pessoas que mudaram o mundo.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Biografia</button>
+        </div>
+      </div>
+
+      <!-- Programação -->
+      <div class="category-card" onclick="searchCategory('programming')">
+        <div class="category-header">
+          <div class="category-icon">💻</div>
+          <div class="category-name">Programação</div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">Desenvolvimento de software, linguagens e tecnologias modernas.</p>
+          <p class="category-count">Milhares de títulos disponíveis</p>
+          <button class="explore-btn">Explorar Programação</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="featured-section">
+      <h3>Temas Populares</h3>
+      <p style="color: #666666; margin-bottom: 20px;">Explore tópicos em alta</p>
+      <div class="featured-tags">
+        <span class="tag" onclick="searchTag('bestseller')">Mais Vendidos</span>
+        <span class="tag" onclick="searchTag('new releases')">Lançamentos</span>
+        <span class="tag" onclick="searchTag('classic')">Clássicos</span>
+        <span class="tag" onclick="searchTag('mystery')">Mistério</span>
+        <span class="tag" onclick="searchTag('fantasy')">Fantasia</span>
+        <span class="tag" onclick="searchTag('self help')">Autoajuda</span>
+        <span class="tag" onclick="searchTag('cooking')">Culinária</span>
+        <span class="tag" onclick="searchTag('travel')">Viagens</span>
+        <span class="tag" onclick="searchTag('poetry')">Poesia</span>
+        <span class="tag" onclick="searchTag('philosophy')">Filosofia</span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Início</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="termos.html">Termos</a>
+      <a href="envio.html">Envio</a>
+      <a href="devolucoes.html">Devoluções</a>
+      <a href="contacto.html">Contato</a>
+    </div>
+    <p>Livraria em Suas Mãos © 2026</p>
+  </footer>
+
+  <script>
+    function searchCategory(category) {
+      // Redireciona para a página inicial com busca da categoria
+      window.location.href = `index.html#catalogo?search=${category}`;
+    }
+
+    function searchTag(tag) {
+      window.location.href = `index.html#catalogo?search=${tag}`;
+    }
+  </script>
 </body>
 </html>
