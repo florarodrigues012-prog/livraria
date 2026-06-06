@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #666; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px; border: 1px solid #CCC; border-radius: 4px; font-family: Georgia, serif; font-size: 0.95em;
+    }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .contact-info-item { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px; }
+    .contact-icon { font-size: 1.8em; min-width: 40px; }
+    @media(max-width:768px) { .contact-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="parceiros.html">Parceiros</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section>
+      <h2>Contacte-nos</h2>
+      <div class="contact-grid">
+        <!-- Formulário -->
+        <div>
+          <h3>Envie uma Mensagem</h3>
+          <div class="form-group">
+            <label>Nome *</label>
+            <input type="text" id="contactName" placeholder="O seu nome">
+          </div>
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input type="email" id="contactEmail" placeholder="email@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label>Assunto</label>
+            <select id="contactSubject">
+              <option>Questão sobre encomenda</option>
+              <option>Informação sobre produto</option>
+              <option>Devoluções e trocas</option>
+              <option>Problema técnico</option>
+              <option>Parceria comercial</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mensagem *</label>
+            <textarea id="contactMessage" placeholder="Descreva como podemos ajudar..."></textarea>
+          </div>
+          <button onclick="sendMessage()" style="padding:14px 28px;background:#666;color:white;border:none;border-radius:4px;cursor:pointer;font-family:Georgia,serif;font-size:1em;">
+            📨 Enviar Mensagem
+          </button>
+        </div>
+
+        <!-- Informações de contacto -->
+        <div>
+          <h3>Informações de Contacto</h3>
+          <div class="contact-info-item">
+            <span class="contact-icon">📧</span>
+            <div>
+              <strong>E-mail</strong>
+              <p style="color:#999;margin-top:4px;">suporte@livrariaemsuasmaos.com</p>
+              <p style="color:#999;font-size:0.85em;">Resposta em até 24 horas</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <span class="contact-icon">📞</span>
+            <div>
+              <strong>Telefone</strong>
+              <p style="color:#999;margin-top:4px;">+351 210 000 000</p>
+              <p style="color:#999;font-size:0.85em;">Seg–Sex, 9h–18h</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <span class="contact-icon">📍</span>
+            <div>
+              <strong>Morada</strong>
+              <p style="color:#999;margin-top:4px;">Rua dos Livros, 123<br>1000-001 Lisboa, Portugal</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <span class="contact-icon">🕐</span>
+            <div>
+              <strong>Horário de Apoio</strong>
+              <p style="color:#999;margin-top:4px;">Segunda a Sexta: 9h–18h<br>Sábado: 10h–14h</p>
+            </div>
+          </div>
+
+          <div class="highlight" style="margin-top:20px;">
+            <p><strong>Chat em tempo real</strong></p>
+            <p style="color:#666;font-size:0.9em;margin-top:6px;">Disponível 24/7 através do botão de chat no canto inferior direito da página.</p>
+          </div>
+
+          <div style="margin-top:20px;">
+            <strong>Redes Sociais</strong>
+            <div class="social-links" style="justify-content:flex-start;margin-top:12px;">
+              <a href="#">📘 Facebook</a>
+              <a href="#">📸 Instagram</a>
+              <a href="#">🐦 Twitter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Perguntas Frequentes</h2>
+      <div id="faqContainer"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos</p>
+      <div class="footer-links">
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="envio.html">Política de Envio</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos</a>
+      </div>
+      <p style="margin-top:15px;font-size:0.85em;">© 2025 Livraria em Suas Mãos.</p>
+    </div>
+  </footer>
+
+  <div class="chat-widget">
+    <div class="chat-box" id="chatBox">
+      <div class="chat-header">💬 Apoio ao Cliente<button class="chat-close" onclick="toggleChat()">×</button></div>
+      <div class="chat-body">
+        <div class="chat-options">
+          <div class="chat-option" onclick="selectOption('pedido')">📦 Consultar Pedido</div>
+          <div class="chat-option" onclick="selectOption('pagamento')">💳 Formas de Pagamento</div>
+          <div class="chat-option" onclick="selectOption('envio')">🚚 Informações de Envio</div>
+        </div>
+      </div>
+    </div>
+    <button class="chat-button" onclick="toggleChat()">💬</button>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function sendMessage() {
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const msg = document.getElementById('contactMessage').value.trim();
+      if (!name || !email || !msg) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      alert(`✅ Mensagem enviada com sucesso!\n\nObrigado, ${name}. Entraremos em contacto via ${email} em breve.`);
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
+      document.getElementById('contactMessage').value = '';
+    }
+
+    const faqs = [
+      { q: 'Quanto tempo demora a entrega?', a: 'As encomendas são processadas em 1-2 dias úteis e a entrega demora entre 3 a 7 dias úteis em Portugal continental.' },
+      { q: 'Como funciona a política de devoluções?', a: 'Aceitamos devoluções até 30 dias após a receção, desde que o produto esteja em perfeitas condições. Veja a nossa <a href="devolucoes.html">política completa</a>.' },
+      { q: 'Quais as formas de pagamento aceites?', a: 'Aceitamos Visa, Mastercard, American Express, MB Way, PayPal e transferência bancária.' },
+      { q: 'Como são calculados os preços?', a: 'Os preços base são obtidos de fontes externas e aplicamos uma margem de 15% para cobrir custos operacionais. Cada produto mostra o preço original e o preço final.' },
+    ];
+
+    document.getElementById('faqContainer').innerHTML = faqs.map(f => `
+      <div style="border-bottom:1px solid #E8E8E8;padding:18px 0;">
+        <p style="font-weight:500;color:#333;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+          ▶ ${f.q}
+        </p>
+        <p style="display:none;color:#666;margin-top:10px;padding-left:18px;">${f.a}</p>
+      </div>`).join('');
+
+    updateCartCount();
+  </script>
+</body>
+</html>

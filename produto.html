@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhe do Livro - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .product-detail { display: grid; grid-template-columns: 280px 1fr; gap: 40px; }
+    .product-detail img { width: 100%; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .detail-price { font-size: 2em; color: #666; font-weight: 600; margin: 15px 0; }
+    .detail-original { text-decoration: line-through; color: #CCC; font-size: 1.1em; margin-right: 10px; }
+    .detail-badge { background: #D3D9E0; color: #666; padding: 4px 10px; border-radius: 3px; font-size: 0.8em; }
+    .detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .meta-item { background: #F8F6F0; padding: 12px; border-radius: 4px; font-size: 0.9em; }
+    .meta-item strong { display: block; color: #999; font-size: 0.85em; margin-bottom: 4px; }
+    .qty-row { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .qty-row button { background: #E8E8E8; border: none; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; font-size: 18px; }
+    .qty-row input { width: 55px; text-align: center; border: 1px solid #CCC; border-radius: 4px; padding: 7px; font-size: 1em; }
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid #E8E8E8; margin-top: 30px; }
+    .tab { padding: 12px 24px; cursor: pointer; color: #999; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab.active { color: #333; border-color: #666; }
+    .tab-content { display: none; padding: 20px 0; line-height: 1.8; color: #666; }
+    .tab-content.active { display: block; }
+    @media(max-width:768px) { .product-detail { grid-template-columns: 1fr; } .detail-meta { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="parceiros.html">Parceiros</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <p style="color:#999;margin-bottom:20px;">
+      <a href="index.html" style="color:#999;text-decoration:none;">Início</a> &rsaquo;
+      <a href="categorias.html" style="color:#999;text-decoration:none;">Categorias</a> &rsaquo;
+      <span id="breadcrumbTitle">Livro</span>
+    </p>
+
+    <section>
+      <div class="product-detail" id="productDetail">
+        <div class="loading" style="grid-column:1/-1;">A carregar livro...</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos — © 2025</p>
+      <div class="footer-links">
+        <a href="envio.html">Envio</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const bookId = params.get('id');
+
+    async function loadBook() {
+      if (!bookId) {
+        document.getElementById('productDetail').innerHTML = '<p>Livro não encontrado. <a href="index.html">Voltar</a></p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`);
+        const book = await res.json();
+        const info = book.volumeInfo;
+        const saleInfo = book.saleInfo || {};
+
+        let basePrice = 19.99;
+        let currency = 'EUR';
+        if (saleInfo.saleability === 'FOR_SALE' && saleInfo.listPrice) {
+          basePrice = saleInfo.listPrice.amount;
+          currency = saleInfo.listPrice.currencyCode;
+        }
+
+        const finalPrice = basePrice * 1.15;
+        const image = info.imageLinks?.large || info.imageLinks?.thumbnail || 'https://placehold.co/280x400?text=Sem+Capa';
+        const title = info.title || 'Título desconhecido';
+        const authors = (info.authors || ['Autor desconhecido']).join(', ');
+        const description = info.description || 'Sem descrição disponível.';
+        const publisher = info.publisher || 'N/D';
+        const publishedDate = info.publishedDate || 'N/D';
+        const pages = info.pageCount || 'N/D';
+        const categories = (info.categories || ['N/D']).join(', ');
+        const language = info.language === 'pt' ? 'Português' : info.language === 'en' ? 'Inglês' : info.language || 'N/D';
+
+        document.getElementById('breadcrumbTitle').textContent = title;
+        document.title = title + ' - Livraria em Suas Mãos';
+
+        document.getElementById('productDetail').innerHTML = `
+          <div>
+            <img src="${image}" alt="${title}" onerror="this.src='https://placehold.co/280x400?text=Sem+Capa'">
+          </div>
+          <div>
+            <h2 style="font-size:1.8em;margin-bottom:8px;">${title}</h2>
+            <p style="color:#999;font-style:italic;margin-bottom:15px;">${authors}</p>
+
+            <div class="detail-price">
+              <span class="detail-original">${basePrice.toFixed(2)} ${currency}</span>
+              ${finalPrice.toFixed(2)} ${currency}
+              <span class="detail-badge">+15% margem</span>
+            </div>
+
+            <div style="color:green;font-size:0.9em;margin-bottom:15px;">✅ Em Stock &nbsp; 🚚 Envio em 3-7 dias úteis</div>
+
+            <div class="qty-row">
+              <label>Quantidade:</label>
+              <button onclick="document.getElementById('qty').value=Math.max(1,+document.getElementById('qty').value-1)">−</button>
+              <input type="number" id="qty" value="1" min="1" max="99">
+              <button onclick="document.getElementById('qty').value=+document.getElementById('qty').value+1">+</button>
+            </div>
+
+            <button onclick="addBookToCart('${title.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${authors.replace(/'/g,"\\'")}','${image}',${finalPrice},'${currency}')"
+              style="padding:14px 28px;background:#666;color:white;border:none;border-radius:4px;font-size:1.05em;cursor:pointer;font-family:Georgia,serif;margin-right:10px;">
+              🛒 Adicionar ao Carrinho
+            </button>
+            <a href="carrinho.html" style="padding:14px 28px;border:1px solid #CCC;text-decoration:none;border-radius:4px;color:#666;">
+              Ver Carrinho
+            </a>
+
+            <div class="detail-meta">
+              <div class="meta-item"><strong>Editora</strong>${publisher}</div>
+              <div class="meta-item"><strong>Data de Publicação</strong>${publishedDate}</div>
+              <div class="meta-item"><strong>Páginas</strong>${pages}</div>
+              <div class="meta-item"><strong>Idioma</strong>${language}</div>
+              <div class="meta-item"><strong>Categoria</strong>${categories}</div>
+              <div class="meta-item"><strong>ISBN</strong>${info.industryIdentifiers?.[0]?.identifier || 'N/D'}</div>
+            </div>
+
+            <div class="tabs">
+              <div class="tab active" onclick="showTab('desc')">Descrição</div>
+              <div class="tab" onclick="showTab('info')">Informações</div>
+            </div>
+            <div class="tab-content active" id="tab-desc">
+              <p>${description}</p>
+            </div>
+            <div class="tab-content" id="tab-info">
+              <p><strong>Preço base (fornecedor):</strong> ${basePrice.toFixed(2)} ${currency}</p>
+              <p><strong>Margem de lucro aplicada:</strong> 15%</p>
+              <p><strong>Preço final:</strong> ${finalPrice.toFixed(2)} ${currency}</p>
+              <p style="margin-top:12px;color:#999;font-size:0.9em;">Os preços são obtidos via Google Books API e actualizados automaticamente.</p>
+            </div>
+          </div>`;
+      } catch(e) {
+        document.getElementById('productDetail').innerHTML = '<p>Erro ao carregar o livro. <a href="index.html">Voltar</a></p>';
+      }
+    }
+
+    function showTab(id) {
+      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['desc','info'][i] === id));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-'+id).classList.add('active');
+    }
+
+    function addBookToCart(title, author, image, price, currency) {
+      const qty = parseInt(document.getElementById('qty').value) || 1;
+      const cart = getCart();
+      const existing = cart.find(i => i.title === title);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ title, author, image, price, currency, qty });
+      }
+      saveCart(cart);
+      updateCartCount();
+      alert(`✅ "${title}" adicionado ao carrinho!\n\nPreço: ${price.toFixed(2)} ${currency}\nQuantidade: ${qty}`);
+    }
+
+    loadBook();
+    updateCartCount();
+  </script>
+</body>
+</html>

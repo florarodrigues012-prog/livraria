@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parceiros - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .partner-card { background: white; border: 1px solid #E8E8E8; border-radius: 6px; padding: 25px; text-align: center; transition: all 0.3s; }
+    .partner-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-3px); }
+    .partner-logo { font-size: 3em; margin-bottom: 12px; }
+    .partner-badge { display: inline-block; background: #D3D9E0; color: #666; padding: 3px 10px; border-radius: 3px; font-size: 0.78em; margin-top: 8px; }
+    .source-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #E8E8E8; }
+    .source-status { padding: 4px 12px; border-radius: 3px; font-size: 0.85em; }
+    .status-active { background: #d4edda; color: #155724; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="parceiros.html">Parceiros</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section>
+      <h2>Os Nossos Parceiros e Fontes</h2>
+      <p style="color:#666;margin-bottom:25px;">
+        Agregamos informações de livros e preços de múltiplas fontes para lhe oferecer o melhor catálogo.
+        Sobre o preço base de cada fonte aplicamos uma <strong>margem de 15%</strong>.
+      </p>
+
+      <div class="products-grid">
+        <div class="partner-card">
+          <div class="partner-logo">📗</div>
+          <h3>Google Books</h3>
+          <p style="color:#666;font-size:0.9em;margin-top:8px;">Maior base de dados de livros do mundo. Mais de 40 milhões de títulos disponíveis para pesquisa e consulta de preços.</p>
+          <span class="partner-badge">Fonte Principal</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-logo">🌐</div>
+          <h3>Open Library</h3>
+          <p style="color:#666;font-size:0.9em;margin-top:8px;">Projecto da Internet Archive com catálogo aberto de livros, incluindo obras de domínio público e edições históricas.</p>
+          <span class="partner-badge">Fonte Secundária</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-logo">📦</div>
+          <h3>Distribuidores Nacionais</h3>
+          <p style="color:#666;font-size:0.9em;margin-top:8px;">Parcerias com distribuidores portugueses e brasileiros para garantir disponibilidade de obras lusófonas.</p>
+          <span class="partner-badge">Parceiro Logístico</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-logo">🏢</div>
+          <h3>Editoras Parceiras</h3>
+          <p style="color:#666;font-size:0.9em;margin-top:8px;">Acordos directos com editoras como Porto Editora, Leya, Bertrand e Dom Quixote para preços competitivos.</p>
+          <span class="partner-badge">Parceiro Editorial</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Como Funcionam as Fontes de Preços</h2>
+      <div class="highlight">
+        <p>
+          A nossa plataforma agrega preços em tempo real de múltiplas fontes.
+          Quando pesquisa um livro, consultamos automaticamente as APIs disponíveis,
+          apresentamos o melhor preço base encontrado e aplicamos a nossa margem de 15%.
+        </p>
+      </div>
+
+      <h3 style="margin-top:25px;margin-bottom:15px;">Estado das Fontes</h3>
+      <div>
+        <div class="source-row">
+          <span>📗 Google Books API</span>
+          <div>
+            <span style="color:#999;font-size:0.9em;margin-right:15px;">Última actualização: agora</span>
+            <span class="source-status status-active">● Activo</span>
+          </div>
+        </div>
+        <div class="source-row">
+          <span>🌐 Open Library API</span>
+          <div>
+            <span style="color:#999;font-size:0.9em;margin-right:15px;">Última actualização: 5 min</span>
+            <span class="source-status status-active">● Activo</span>
+          </div>
+        </div>
+        <div class="source-row">
+          <span>📦 Distribuidores PT</span>
+          <div>
+            <span style="color:#999;font-size:0.9em;margin-right:15px;">Última actualização: 1h</span>
+            <span class="source-status status-active">● Activo</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Torne-se Parceiro</h2>
+      <p style="color:#666;margin-bottom:20px;">
+        É uma editora ou distribuidora? Junte-se à nossa rede de parceiros e alcance mais leitores.
+      </p>
+      <div class="highlight">
+        <p><strong>Vantagens:</strong> Visibilidade no catálogo, integração de API facilitada, relatórios de vendas mensais.</p>
+      </div>
+      <a href="contacto.html" style="display:inline-block;margin-top:20px;padding:14px 28px;background:#666;color:white;text-decoration:none;border-radius:4px;">
+        📨 Contactar para Parceria
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos</p>
+      <div class="footer-links">
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="envio.html">Política de Envio</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+      <p style="margin-top:15px;font-size:0.85em;">© 2025 Livraria em Suas Mãos.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>updateCartCount();</script>
+</body>
+</html>

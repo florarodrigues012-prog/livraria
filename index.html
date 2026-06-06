@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="parceiros.html">Parceiros</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Admin Panel -->
+    <section class="admin-panel">
+      <h3>⚙️ Painel de Configuração</h3>
+      <div class="config-row">
+        <label>Margem de Lucro (%):</label>
+        <input type="number" id="markupRate" value="15" min="0" max="100" step="0.5">
+        <button onclick="updateMarkup()">Aplicar</button>
+        <span id="markupStatus" style="color:#666;font-style:italic;">Margem atual: 15%</span>
+      </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="catalogo">
+      <h2>Catálogo de Livros</h2>
+      <div class="search-container">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Pesquise por título, autor ou ISBN..." autocomplete="off">
+          <button onclick="searchBooks()">🔍 Pesquisar</button>
+        </div>
+        <div class="filter-options">
+          <select id="languageFilter">
+            <option value="">Todos os idiomas</option>
+            <option value="pt">Português</option>
+            <option value="en">Inglês</option>
+            <option value="es">Espanhol</option>
+            <option value="fr">Francês</option>
+          </select>
+          <select id="sortFilter">
+            <option value="relevance">Relevância</option>
+            <option value="newest">Mais Recentes</option>
+          </select>
+        </div>
+      </div>
+      <div id="productsContainer">
+        <div class="loading">👆 Pesquise um livro acima ou escolha uma categoria</div>
+      </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section>
+      <h2>Categorias em Destaque</h2>
+      <div class="categories-grid">
+        <div class="card" onclick="searchByCategory('romance')">❤️ Romance</div>
+        <div class="card" onclick="searchByCategory('ficção científica')">🚀 Ficção Científica</div>
+        <div class="card" onclick="searchByCategory('história')">🏛️ História</div>
+        <div class="card" onclick="searchByCategory('programação')">💻 Tecnologia</div>
+        <div class="card" onclick="searchByCategory('filosofia')">🧠 Filosofia</div>
+        <div class="card" onclick="searchByCategory('infantil')">🧸 Infantil</div>
+        <div class="card" onclick="searchByCategory('culinária')">🍳 Culinária</div>
+        <div class="card" onclick="searchByCategory('autoajuda')">⭐ Autoajuda</div>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section>
+      <h2>Por que Comprar Connosco?</h2>
+      <div class="highlight">
+        <p>Agregamos os melhores livros de diversas fontes e garantimos o melhor preço com entrega segura em toda a Europa.</p>
+      </div>
+      <div class="categories-grid" style="margin-top:20px">
+        <div class="card">🚚 Envio Rápido<br><small>3 a 7 dias úteis</small></div>
+        <div class="card">🔒 Pagamento Seguro<br><small>Visa, MB, PayPal</small></div>
+        <div class="card">↩️ Devoluções<br><small>30 dias garantidos</small></div>
+        <div class="card">📞 Apoio 24/7<br><small>Chat e e-mail</small></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos</p>
+      <div class="footer-links">
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="parceiros.html">Parceiros</a>
+        <a href="envio.html">Política de Envio</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos e Condições</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+      <p style="margin-top:15px;font-size:0.85em;">© 2025 Livraria em Suas Mãos. Todos os direitos reservados.</p>
+      <p style="font-size:0.8em;color:#999;margin-top:8px;">Preços obtidos via Google Books API com margem de lucro aplicada.</p>
+    </div>
+  </footer>
+
+  <!-- Chat Widget -->
+  <div class="chat-widget">
+    <div class="chat-box" id="chatBox">
+      <div class="chat-header">
+        💬 Apoio ao Cliente
+        <button class="chat-close" onclick="toggleChat()">×</button>
+      </div>
+      <div class="chat-body">
+        <p style="margin-bottom:15px;">Olá! Como posso ajudar?</p>
+        <div class="chat-options">
+          <div class="chat-option" onclick="selectOption('pedido')">📦 Consultar Pedido</div>
+          <div class="chat-option" onclick="selectOption('cancelamento')">❌ Cancelar Pedido</div>
+          <div class="chat-option" onclick="selectOption('pagamento')">💳 Formas de Pagamento</div>
+          <div class="chat-option" onclick="selectOption('envio')">🚚 Informações de Envio</div>
+        </div>
+      </div>
+    </div>
+    <button class="chat-button" onclick="toggleChat()">💬</button>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

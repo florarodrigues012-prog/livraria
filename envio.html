@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Envio - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #E8E8E8; }
+    th { background: #F8F6F0; color: #666; font-weight: 500; }
+    tr:hover { background: #FAFAFA; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section>
+      <h2>🚚 Política de Envio</h2>
+      <div class="highlight">
+        <p><strong>Envio grátis</strong> em todas as encomendas acima de 30 €!</p>
+      </div>
+
+      <h3 style="margin-top:25px;">Prazos e Custos</h3>
+      <table>
+        <thead>
+          <tr><th>Destino</th><th>Prazo</th><th>Custo</th><th>Envio Grátis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Portugal Continental</td><td>2–4 dias úteis</td><td>3,99 €</td><td>A partir de 30 €</td></tr>
+          <tr><td>Ilhas (Açores/Madeira)</td><td>4–7 dias úteis</td><td>6,99 €</td><td>A partir de 50 €</td></tr>
+          <tr><td>Espanha</td><td>3–5 dias úteis</td><td>5,99 €</td><td>A partir de 40 €</td></tr>
+          <tr><td>Resto da Europa</td><td>5–8 dias úteis</td><td>8,99 €</td><td>A partir de 60 €</td></tr>
+          <tr><td>Brasil</td><td>10–15 dias úteis</td><td>12,99 €</td><td>A partir de 80 €</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Processamento de Encomendas</h2>
+      <div class="categories-grid">
+        <div class="card">
+          <div style="font-size:2em;margin-bottom:10px;">1️⃣</div>
+          <strong>Confirmação</strong>
+          <p style="font-size:0.85em;color:#999;margin-top:8px;">E-mail de confirmação enviado em minutos</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2em;margin-bottom:10px;">2️⃣</div>
+          <strong>Preparação</strong>
+          <p style="font-size:0.85em;color:#999;margin-top:8px;">1–2 dias úteis para preparar a encomenda</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2em;margin-bottom:10px;">3️⃣</div>
+          <strong>Envio</strong>
+          <p style="font-size:0.85em;color:#999;margin-top:8px;">Código de tracking enviado por e-mail</p>
+        </div>
+        <div class="card">
+          <div style="font-size:2em;margin-bottom:10px;">4️⃣</div>
+          <strong>Entrega</strong>
+          <p style="font-size:0.85em;color:#999;margin-top:8px;">Entrega na morada indicada</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Informações Adicionais</h2>
+      <div class="highlight">
+        <p><strong>Embalagem:</strong> Todos os livros são embalados com cuidado para chegarem em perfeitas condições.</p>
+      </div>
+      <p style="margin-top:15px;color:#666;line-height:1.9;">
+        As encomendas são processadas em dias úteis (segunda a sexta, 9h–17h). Encomendas feitas ao fim de semana
+        ou em feriados são processadas no próximo dia útil. Após o envio, receberá um e-mail com o número de rastreio.
+      </p>
+      <p style="margin-top:12px;color:#666;">
+        Em caso de atraso ou problema com a entrega, contacte-nos em <a href="contacto.html">contacto.html</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos</p>
+      <div class="footer-links">
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+      <p style="margin-top:15px;font-size:0.85em;">© 2025 Livraria em Suas Mãos.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>updateCartCount();</script>
+</body>
+</html>

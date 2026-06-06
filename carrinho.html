@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .cart-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .cart-table th, .cart-table td { padding: 14px; text-align: left; border-bottom: 1px solid #E8E8E8; }
+    .cart-table th { background: #F8F6F0; color: #666; font-weight: 500; }
+    .cart-table img { width: 60px; height: 80px; object-fit: cover; border-radius: 4px; }
+    .qty-btn { background: #E8E8E8; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    .qty-input { width: 45px; text-align: center; border: 1px solid #CCC; border-radius: 4px; padding: 4px; }
+    .remove-btn { background: none; border: none; color: #CC0000; cursor: pointer; font-size: 1.2em; }
+    .cart-summary { background: #F8F6F0; padding: 25px; border-radius: 6px; border: 1px solid #E6E2D3; }
+    .summary-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E6E2D3; }
+    .summary-total { display: flex; justify-content: space-between; padding: 15px 0; font-size: 1.3em; font-weight: 600; }
+    .empty-cart { text-align: center; padding: 60px; color: #999; }
+    .empty-cart a { color: #666; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="parceiros.html">Parceiros</a></li>
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section>
+      <h2>🛒 O Meu Carrinho</h2>
+      <div id="cartContent"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos</p>
+      <div class="footer-links">
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="envio.html">Política de Envio</a>
+        <a href="devolucoes.html">Devoluções</a>
+        <a href="termos.html">Termos</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+      <p style="margin-top:15px;font-size:0.85em;">© 2025 Livraria em Suas Mãos.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cartContent');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <div style="font-size:4em;margin-bottom:20px;">🛒</div>
+            <h3>O seu carrinho está vazio</h3>
+            <p style="margin-top:12px;"><a href="index.html">Voltar às compras</a></p>
+          </div>`;
+        return;
+      }
+
+      let subtotal = 0;
+      const rows = cart.map((item, idx) => {
+        const total = item.price * item.qty;
+        subtotal += total;
+        return `
+          <tr>
+            <td><img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/60x80?text=Livro'"></td>
+            <td>
+              <strong>${item.title}</strong><br>
+              <small style="color:#999;">${item.author}</small>
+            </td>
+            <td>${item.price.toFixed(2)} €</td>
+            <td>
+              <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+              <input class="qty-input" type="number" value="${item.qty}" min="1" onchange="setQty(${idx}, this.value)">
+              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            </td>
+            <td>${total.toFixed(2)} €</td>
+            <td><button class="remove-btn" onclick="removeItem(${idx})" title="Remover">🗑️</button></td>
+          </tr>`;
+      }).join('');
+
+      const shipping = subtotal >= 30 ? 0 : 3.99;
+      const total = subtotal + shipping;
+
+      container.innerHTML = `
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Livro</th>
+              <th>Preço Unit.</th>
+              <th>Quantidade</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+
+        <div style="display:grid;grid-template-columns:1fr 350px;gap:30px;margin-top:30px;flex-wrap:wrap;">
+          <div>
+            <button onclick="clearCart()" style="padding:12px 20px;background:#CC0000;color:white;border:none;border-radius:4px;cursor:pointer;">
+              🗑️ Limpar Carrinho
+            </button>
+            <a href="index.html" style="display:inline-block;margin-left:15px;padding:12px 20px;background:#666;color:white;text-decoration:none;border-radius:4px;">
+              ← Continuar a Comprar
+            </a>
+          </div>
+          <div class="cart-summary">
+            <div class="summary-row"><span>Subtotal:</span><span>${subtotal.toFixed(2)} €</span></div>
+            <div class="summary-row">
+              <span>Envio:</span>
+              <span>${shipping === 0 ? '<span style="color:green">Grátis</span>' : shipping.toFixed(2) + ' €'}</span>
+            </div>
+            ${subtotal < 30 ? `<div style="font-size:0.85em;color:#999;margin:8px 0;">Faltam ${(30 - subtotal).toFixed(2)} € para envio grátis</div>` : ''}
+            <div class="summary-total"><span>Total:</span><span>${total.toFixed(2)} €</span></div>
+            <a href="checkout.html" style="display:block;padding:15px;background:#666;color:white;text-decoration:none;border-radius:4px;text-align:center;margin-top:15px;font-size:1.05em;">
+              Finalizar Compra →
+            </a>
+          </div>
+        </div>`;
+    }
+
+    function changeQty(idx, delta) {
+      const cart = getCart();
+      cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+      saveCart(cart);
+      renderCart();
+      updateCartCount();
+    }
+
+    function setQty(idx, val) {
+      const cart = getCart();
+      cart[idx].qty = Math.max(1, parseInt(val) || 1);
+      saveCart(cart);
+      renderCart();
+      updateCartCount();
+    }
+
+    function removeItem(idx) {
+      const cart = getCart();
+      cart.splice(idx, 1);
+      saveCart(cart);
+      renderCart();
+      updateCartCount();
+    }
+
+    function clearCart() {
+      if (confirm('Tem a certeza que quer limpar o carrinho?')) {
+        saveCart([]);
+        renderCart();
+        updateCartCount();
+      }
+    }
+
+    renderCart();
+    updateCartCount();
+  </script>
+</body>
+</html>

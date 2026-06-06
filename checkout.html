@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Livraria em Suas Mãos</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #666; }
+    .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #CCC; border-radius: 4px; font-family: Georgia, serif; font-size: 0.95em; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .payment-methods { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+    .pay-method { border: 2px solid #E8E8E8; border-radius: 6px; padding: 12px 18px; cursor: pointer; transition: all 0.2s; text-align: center; min-width: 90px; }
+    .pay-method.selected { border-color: #666; background: #F8F6F0; }
+    .order-summary { background: #F8F6F0; padding: 25px; border-radius: 6px; border: 1px solid #E6E2D3; position: sticky; top: 80px; }
+    .order-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E6E2D3; font-size: 0.9em; }
+    .order-total { display: flex; justify-content: space-between; padding: 15px 0; font-size: 1.2em; font-weight: 600; }
+    .steps { display: flex; justify-content: center; gap: 0; margin-bottom: 30px; }
+    .step { padding: 10px 25px; background: #E8E8E8; color: #999; font-size: 0.9em; }
+    .step.active { background: #666; color: white; }
+    .step:first-child { border-radius: 4px 0 0 4px; }
+    .step:last-child { border-radius: 0 4px 4px 0; }
+    @media(max-width:768px) { .checkout-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Livraria em Suas Mãos</h1>
+    <p>Os melhores livros ao melhor preço</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="categorias.html">Categorias</a></li>
+      <li><a href="carrinho.html">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="steps">
+      <div class="step active">1. Dados</div>
+      <div class="step active">2. Pagamento</div>
+      <div class="step">3. Confirmação</div>
+    </div>
+
+    <div class="checkout-grid">
+      <!-- Formulário -->
+      <div>
+        <section>
+          <h2>Dados de Entrega</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome *</label>
+              <input type="text" id="firstName" placeholder="João" required>
+            </div>
+            <div class="form-group">
+              <label>Apelido *</label>
+              <input type="text" id="lastName" placeholder="Silva" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input type="email" id="email" placeholder="joao@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="phone" placeholder="+351 912 345 678">
+          </div>
+          <div class="form-group">
+            <label>Morada *</label>
+            <input type="text" id="address" placeholder="Rua Exemplo, 123" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Código Postal *</label>
+              <input type="text" id="postalCode" placeholder="1000-001" required>
+            </div>
+            <div class="form-group">
+              <label>Cidade *</label>
+              <input type="text" id="city" placeholder="Lisboa" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>País *</label>
+            <select id="country">
+              <option value="PT">Portugal</option>
+              <option value="ES">Espanha</option>
+              <option value="FR">França</option>
+              <option value="DE">Alemanha</option>
+              <option value="UK">Reino Unido</option>
+              <option value="BR">Brasil</option>
+            </select>
+          </div>
+        </section>
+
+        <section>
+          <h2>Forma de Pagamento</h2>
+          <div class="payment-methods">
+            <div class="pay-method selected" onclick="selectPayment(this, 'card')">💳 Cartão</div>
+            <div class="pay-method" onclick="selectPayment(this, 'mbway')">📱 MB Way</div>
+            <div class="pay-method" onclick="selectPayment(this, 'paypal')">🅿️ PayPal</div>
+            <div class="pay-method" onclick="selectPayment(this, 'transfer')">🏦 Transferência</div>
+          </div>
+
+          <div id="cardFields" style="margin-top:20px;">
+            <div class="form-group">
+              <label>Número do Cartão</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Validade</label>
+                <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cardCvv" placeholder="123" maxlength="3">
+              </div>
+            </div>
+          </div>
+          <div id="mbwayFields" style="display:none;margin-top:20px;">
+            <div class="form-group">
+              <label>Número de Telemóvel</label>
+              <input type="tel" placeholder="+351 912 345 678">
+            </div>
+          </div>
+          <div id="paypalFields" style="display:none;margin-top:20px;">
+            <p style="color:#666;">Será redirecionado para o PayPal após confirmar a encomenda.</p>
+          </div>
+          <div id="transferFields" style="display:none;margin-top:20px;">
+            <div class="highlight">
+              <p><strong>IBAN:</strong> PT50 0000 0000 0000 0000 0000 0</p>
+              <p><strong>Referência:</strong> Será gerada após a encomenda</p>
+            </div>
+          </div>
+
+          <div style="margin-top:25px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+              <input type="checkbox" id="termsCheck">
+              Aceito os <a href="termos.html" target="_blank">Termos e Condições</a>
+            </label>
+          </div>
+
+          <button onclick="placeOrder()" style="margin-top:20px;width:100%;padding:16px;background:#666;color:white;border:none;border-radius:4px;font-size:1.1em;cursor:pointer;font-family:Georgia,serif;">
+            ✅ Confirmar Encomenda
+          </button>
+        </section>
+      </div>
+
+      <!-- Resumo -->
+      <div>
+        <div class="order-summary">
+          <h3 style="margin-bottom:18px;">Resumo da Encomenda</h3>
+          <div id="orderItems"></div>
+          <div class="order-total"><span>Total:</span><span id="orderTotal">0.00 €</span></div>
+          <div style="font-size:0.85em;color:#999;margin-top:10px;">
+            <p>🔒 Pagamento 100% seguro</p>
+            <p style="margin-top:6px;">🚚 Envio em 3-7 dias úteis</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>📚 Livraria em Suas Mãos — © 2025</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    let selectedPayment = 'card';
+
+    function selectPayment(el, method) {
+      document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedPayment = method;
+      ['cardFields','mbwayFields','paypalFields','transferFields'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+      document.getElementById(method === 'card' ? 'cardFields' :
+        method === 'mbway' ? 'mbwayFields' :
+        method === 'paypal' ? 'paypalFields' : 'transferFields').style.display = 'block';
+    }
+
+    function renderOrderSummary() {
+      const cart = getCart();
+      const container = document.getElementById('orderItems');
+      let subtotal = 0;
+      container.innerHTML = cart.map(item => {
+        const t = item.price * item.qty;
+        subtotal += t;
+        return `<div class="order-item"><span>${item.title} x${item.qty}</span><span>${t.toFixed(2)} €</span></div>`;
+      }).join('') + `<div class="order-item"><span>Envio</span><span>${subtotal >= 30 ? '<span style="color:green">Grátis</span>' : '3.99 €'}</span></div>`;
+      const shipping = subtotal >= 30 ? 0 : 3.99;
+      document.getElementById('orderTotal').textContent = (subtotal + shipping).toFixed(2) + ' €';
+    }
+
+    function placeOrder() {
+      if (!document.getElementById('termsCheck').checked) {
+        alert('Por favor, aceite os Termos e Condições.');
+        return;
+      }
+      const required = ['firstName','lastName','email','address','postalCode','city'];
+      for (const id of required) {
+        if (!document.getElementById(id).value.trim()) {
+          alert('Por favor, preencha todos os campos obrigatórios (*).');
+          document.getElementById(id).focus();
+          return;
+        }
+      }
+      saveCart([]);
+      updateCartCount();
+      document.querySelector('main').innerHTML = `
+        <section style="text-align:center;padding:60px;">
+          <div style="font-size:4em;margin-bottom:20px;">✅</div>
+          <h2>Encomenda Confirmada!</h2>
+          <p style="color:#666;margin-top:15px;">Obrigado pela sua compra. Receberá um e-mail de confirmação em breve.</p>
+          <p style="color:#999;margin-top:10px;">Número de encomenda: #LIV${Date.now().toString().slice(-6)}</p>
+          <a href="index.html" style="display:inline-block;margin-top:30px;padding:14px 28px;background:#666;color:white;text-decoration:none;border-radius:4px;">
+            Voltar à Loja
+          </a>
+        </section>`;
+    }
+
+    // Format card number
+    document.getElementById('cardNumber').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim().slice(0,19);
+    });
+    document.getElementById('cardExpiry').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'').replace(/^(\d{2})(\d)/,'$1/$2').slice(0,5);
+    });
+
+    renderOrderSummary();
+    updateCartCount();
+  </script>
+</body>
+</html>
