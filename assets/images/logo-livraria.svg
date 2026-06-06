@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Logótipo Livraria em Suas Mãos">
+  <defs>
+    <path id="arcTop" d="M 30 100 A 70 70 0 0 1 170 100" fill="none"/>
+    <path id="arcBottom" d="M 42 138 A 58 58 0 0 0 158 138" fill="none"/>
+  </defs>
+
+  <circle cx="100" cy="100" r="96" fill="#F8F6F0" stroke="#666" stroke-width="3"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+
+  <text font-family="Georgia, serif" font-size="13" letter-spacing="2" fill="#666">
+    <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LIVRARIA EM SUAS MÃOS</textPath>
+  </text>
+  <text font-family="Georgia, serif" font-size="10" letter-spacing="1.5" fill="#999">
+    <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">ABRA PORTAS PARA MUNDOS</textPath>
+  </text>
+
+  <!-- Open book -->
+  <g transform="translate(100,108)">
+    <path d="M -34 -6 C -20 -16 -8 -16 0 -8 C 8 -16 20 -16 34 -6 L 34 18 C 20 8 8 8 0 16 C -8 8 -20 8 -34 18 Z"
+          fill="#FFFFFF" stroke="#666" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="0" y1="-8" x2="0" y2="16" stroke="#666" stroke-width="2"/>
+    <path d="M -28 -2 C -18 -9 -9 -9 -3 -3" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+    <path d="M -28 5 C -18 -2 -9 -2 -3 4" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+    <path d="M 28 -2 C 18 -9 9 -9 3 -3" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+    <path d="M 28 5 C 18 -2 9 -2 3 4" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+  </g>
+
+  <!-- Hands cradling the book -->
+  <g fill="#666">
+    <path d="M -52 28 C -52 14 -42 6 -30 8 L -30 26 C -38 22 -46 26 -48 36 C -50 44 -46 50 -38 52 L -8 56 L -8 64 L -42 60 C -54 58 -60 46 -52 28 Z"/>
+    <path d="M 52 28 C 52 14 42 6 30 8 L 30 26 C 38 22 46 26 48 36 C 50 44 46 50 38 52 L 8 56 L 8 64 L 42 60 C 54 58 60 46 52 28 Z"/>
+  </g>
+</svg>
