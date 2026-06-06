@@ -28,6 +28,9 @@
 <body>
 
   <header>
+    <div class="logo-container">
+      <img src="assets/images/logo-livraria.svg" alt="Logótipo Livraria em Suas Mãos" onerror="this.parentElement.style.display='none'">
+    </div>
     <h1>📚 Livraria em Suas Mãos</h1>
     <p>Os melhores livros ao melhor preço</p>
   </header>
@@ -116,9 +119,7 @@
             <p style="color:#999;font-style:italic;margin-bottom:15px;">${authors}</p>
 
             <div class="detail-price">
-              <span class="detail-original">${basePrice.toFixed(2)} ${currency}</span>
               ${finalPrice.toFixed(2)} ${currency}
-              <span class="detail-badge">+15% margem</span>
             </div>
 
             <div style="color:green;font-size:0.9em;margin-bottom:15px;">✅ Em Stock &nbsp; 🚚 Envio em 3-7 dias úteis</div>
@@ -155,10 +156,12 @@
               <p>${description}</p>
             </div>
             <div class="tab-content" id="tab-info">
-              <p><strong>Preço base (fornecedor):</strong> ${basePrice.toFixed(2)} ${currency}</p>
-              <p><strong>Margem de lucro aplicada:</strong> 15%</p>
-              <p><strong>Preço final:</strong> ${finalPrice.toFixed(2)} ${currency}</p>
-              <p style="margin-top:12px;color:#999;font-size:0.9em;">Os preços são obtidos via Google Books API e actualizados automaticamente.</p>
+              <p><strong>Editora:</strong> ${publisher}</p>
+              <p><strong>Data de Publicação:</strong> ${publishedDate}</p>
+              <p><strong>Páginas:</strong> ${pages}</p>
+              <p><strong>Idioma:</strong> ${language}</p>
+              <p><strong>Categoria:</strong> ${categories}</p>
+              <p style="margin-top:12px;color:#999;font-size:0.9em;">Catálogo agregado via Google Books API. Imagens, descrições e dados sujeitos a disponibilidade da fonte.</p>
             </div>
           </div>`;
       } catch(e) {

@@ -21,6 +21,9 @@
 <body>
 
   <header>
+    <div class="logo-container">
+      <img src="assets/images/logo-livraria.svg" alt="Logótipo Livraria em Suas Mãos" onerror="this.parentElement.style.display='none'">
+    </div>
     <h1>📚 Livraria em Suas Mãos</h1>
     <p>Os melhores livros ao melhor preço</p>
   </header>
@@ -145,11 +148,33 @@
     <div class="chat-box" id="chatBox">
       <div class="chat-header">💬 Apoio ao Cliente<button class="chat-close" onclick="toggleChat()">×</button></div>
       <div class="chat-body">
-        <div class="chat-options">
-          <div class="chat-option" onclick="selectOption('pedido')">📦 Consultar Pedido</div>
-          <div class="chat-option" onclick="selectOption('pagamento')">💳 Formas de Pagamento</div>
-          <div class="chat-option" onclick="selectOption('envio')">🚚 Informações de Envio</div>
+        <div class="chat-greeting">
+          <strong>Olá! 👋 Em que podemos ajudar?</strong>
+          Escolha uma opção para resposta imediata.
         </div>
+        <div class="chat-options">
+          <div class="chat-option" onclick="selectOption('pedido')">
+            📦 Consultar Pedido
+            <span class="chat-option-desc">Estado e rastreio da encomenda</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('pagamento')">
+            💳 Formas de Pagamento
+            <span class="chat-option-desc">Cartão, MB Way, PayPal e mais</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('envio')">
+            🚚 Envio e Entregas
+            <span class="chat-option-desc">Prazos, custos e regiões</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('devolucao')">
+            ↩️ Devoluções e Trocas
+            <span class="chat-option-desc">Como devolver um livro</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('humano')">
+            🙋 Falar com a Equipa
+            <span class="chat-option-desc">Contacto humano e horários</span>
+          </div>
+        </div>
+        <div class="chat-footer-note">⏱️ Tempo médio de resposta: poucos minutos</div>
       </div>
     </div>
     <button class="chat-button" onclick="toggleChat()">💬</button>

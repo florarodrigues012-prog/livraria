@@ -9,6 +9,9 @@
 <body>
 
   <header>
+    <div class="logo-container">
+      <img src="assets/images/logo-livraria.svg" alt="Logótipo Livraria em Suas Mãos" onerror="this.parentElement.style.display='none'">
+    </div>
     <h1>📚 Livraria em Suas Mãos</h1>
     <p>Os melhores livros ao melhor preço</p>
   </header>
@@ -25,17 +28,6 @@
   </nav>
 
   <main>
-    <!-- Admin Panel -->
-    <section class="admin-panel">
-      <h3>⚙️ Painel de Configuração</h3>
-      <div class="config-row">
-        <label>Margem de Lucro (%):</label>
-        <input type="number" id="markupRate" value="15" min="0" max="100" step="0.5">
-        <button onclick="updateMarkup()">Aplicar</button>
-        <span id="markupStatus" style="color:#666;font-style:italic;">Margem atual: 15%</span>
-      </div>
-    </section>
-
     <!-- Search Section -->
     <section id="catalogo">
       <h2>Catálogo de Livros</h2>
@@ -65,7 +57,8 @@
 
     <!-- Featured Categories -->
     <section>
-      <h2>Categorias em Destaque</h2>
+      <h2>10 Categorias em Destaque</h2>
+      <p style="color:#999;margin-bottom:20px;">Explore os géneros mais procurados pelos nossos leitores</p>
       <div class="categories-grid">
         <div class="card" onclick="searchByCategory('romance')">❤️ Romance</div>
         <div class="card" onclick="searchByCategory('ficção científica')">🚀 Ficção Científica</div>
@@ -75,20 +68,75 @@
         <div class="card" onclick="searchByCategory('infantil')">🧸 Infantil</div>
         <div class="card" onclick="searchByCategory('culinária')">🍳 Culinária</div>
         <div class="card" onclick="searchByCategory('autoajuda')">⭐ Autoajuda</div>
+        <div class="card" onclick="searchByCategory('thriller mistério')">🔍 Thriller & Mistério</div>
+        <div class="card" onclick="searchByCategory('arte design')">🎨 Arte & Design</div>
       </div>
+    </section>
+
+    <!-- Category Showcase: livros pré-carregados de todas as categorias -->
+    <section>
+      <h2>Livros em Destaque por Categoria</h2>
+      <p style="color:#999;margin-bottom:5px;">Uma seleção de livros disponíveis em cada categoria, prontos a encomendar</p>
+      <div id="categoryShowcase"></div>
     </section>
 
     <!-- Info Section -->
     <section>
       <h2>Por que Comprar Connosco?</h2>
       <div class="highlight">
-        <p>Agregamos os melhores livros de diversas fontes e garantimos o melhor preço com entrega segura em toda a Europa.</p>
+        <p>Agregamos livros de diversas fontes e fornecedores de confiança para lhe oferecer o maior catálogo possível, com preços claros e entrega segura em toda a Europa e Brasil.</p>
       </div>
-      <div class="categories-grid" style="margin-top:20px">
-        <div class="card">🚚 Envio Rápido<br><small>3 a 7 dias úteis</small></div>
-        <div class="card">🔒 Pagamento Seguro<br><small>Visa, MB, PayPal</small></div>
-        <div class="card">↩️ Devoluções<br><small>30 dias garantidos</small></div>
-        <div class="card">📞 Apoio 24/7<br><small>Chat e e-mail</small></div>
+
+      <div class="trust-stats">
+        <div class="trust-stat"><strong>+40M</strong><span>Títulos pesquisáveis</span></div>
+        <div class="trust-stat"><strong>4.8★</strong><span>Avaliação média dos clientes</span></div>
+        <div class="trust-stat"><strong>3-7</strong><span>Dias úteis de entrega</span></div>
+        <div class="trust-stat"><strong>30</strong><span>Dias para devolução</span></div>
+      </div>
+
+      <div class="categories-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+        <div class="benefit-card">
+          <span class="benefit-icon">🔎</span>
+          <div>
+            <strong>Catálogo Imenso</strong>
+            <p>Pesquisamos em milhões de títulos para encontrar exatamente o livro que procura, em vários idiomas e edições.</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <span class="benefit-icon">🚚</span>
+          <div>
+            <strong>Envio Rápido e Rastreável</strong>
+            <p>Entregas em 3 a 7 dias úteis, com código de rastreio enviado por e-mail. Envio grátis acima de 30 €.</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <span class="benefit-icon">🔒</span>
+          <div>
+            <strong>Pagamento 100% Seguro</strong>
+            <p>Aceitamos Visa, Mastercard, MB Way, PayPal e transferência bancária, com encriptação de ponta a ponta.</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <span class="benefit-icon">↩️</span>
+          <div>
+            <strong>Devoluções Sem Complicações</strong>
+            <p>Até 30 dias para devolver qualquer livro em perfeitas condições, com reembolso garantido.</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <span class="benefit-icon">💬</span>
+          <div>
+            <strong>Apoio ao Cliente Dedicado</strong>
+            <p>A nossa equipa está disponível por chat, e-mail e telefone para o ajudar em qualquer etapa da compra.</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <span class="benefit-icon">🏷️</span>
+          <div>
+            <strong>Preços Transparentes</strong>
+            <p>O preço apresentado é sempre o preço final — sem custos escondidos nem surpresas no checkout.</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -117,13 +165,37 @@
         <button class="chat-close" onclick="toggleChat()">×</button>
       </div>
       <div class="chat-body">
-        <p style="margin-bottom:15px;">Olá! Como posso ajudar?</p>
-        <div class="chat-options">
-          <div class="chat-option" onclick="selectOption('pedido')">📦 Consultar Pedido</div>
-          <div class="chat-option" onclick="selectOption('cancelamento')">❌ Cancelar Pedido</div>
-          <div class="chat-option" onclick="selectOption('pagamento')">💳 Formas de Pagamento</div>
-          <div class="chat-option" onclick="selectOption('envio')">🚚 Informações de Envio</div>
+        <div class="chat-greeting">
+          <strong>Olá! 👋 Em que podemos ajudar?</strong>
+          Escolha uma das opções abaixo para resposta imediata, ou fale com a nossa equipa.
         </div>
+        <div class="chat-options">
+          <div class="chat-option" onclick="selectOption('pedido')">
+            📦 Consultar Pedido
+            <span class="chat-option-desc">Estado e rastreio da encomenda</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('cancelamento')">
+            ❌ Cancelar Encomenda
+            <span class="chat-option-desc">Antes ou depois do envio</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('pagamento')">
+            💳 Formas de Pagamento
+            <span class="chat-option-desc">Cartão, MB Way, PayPal e mais</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('envio')">
+            🚚 Envio e Entregas
+            <span class="chat-option-desc">Prazos, custos e regiões</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('devolucao')">
+            ↩️ Devoluções e Trocas
+            <span class="chat-option-desc">Como devolver um livro</span>
+          </div>
+          <div class="chat-option" onclick="selectOption('humano')">
+            🙋 Falar com a Equipa
+            <span class="chat-option-desc">Contacto humano e horários</span>
+          </div>
+        </div>
+        <div class="chat-footer-note">⏱️ Tempo médio de resposta: poucos minutos</div>
       </div>
     </div>
     <button class="chat-button" onclick="toggleChat()">💬</button>

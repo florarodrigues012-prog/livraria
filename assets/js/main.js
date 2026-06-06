@@ -52,26 +52,6 @@ function calculateFinalPrice(basePrice) {
   return basePrice * (1 + markupPercentage / 100);
 }
 
-function updateMarkup() {
-  const input = document.getElementById('markupRate');
-  if (!input) return;
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val < 0 || val > 200) {
-    alert('Introduza uma margem válida entre 0 e 200%.');
-    return;
-  }
-  markupPercentage = val;
-  localStorage.setItem('markupPercentage', markupPercentage);
-  const status = document.getElementById('markupStatus');
-  if (status) status.textContent = 'Margem atual: ' + markupPercentage + '%';
-
-  const container = document.getElementById('productsContainer');
-  if (container && container.querySelector('.products-grid')) {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput && searchInput.value.trim()) searchBooks();
-  }
-}
-
 // --- Pesquisa de livros (Google Books API) ---
 
 async function searchBooks() {
@@ -166,9 +146,7 @@ function displayBooks(books) {
         '<a href="produto.html?id=' + bookId + '" class="product-title" style="text-decoration:none;color:inherit;">' + title + '</a>' +
         '<div class="product-author">' + author + '</div>' +
         '<div class="product-price">' +
-          '<span class="original-price">' + basePrice.toFixed(2) + ' ' + currency + '</span>' +
           '<span class="final-price">' + finalPrice.toFixed(2) + ' ' + currency + '</span>' +
-          '<span class="markup-badge">+' + markupPercentage + '%</span>' +
         '</div>' +
         '<button class="add-to-cart"' +
           ' onclick="addToCart(\'' + safeTitle + '\', ' + finalPrice + ', \'' + currency + '\', \'' + safeAuthor + '\', \'' + safeImage + '\', \'' + bookId + '\')">' +
@@ -192,12 +170,92 @@ function toggleChat() {
 
 function selectOption(option) {
   const responses = {
-    pedido: 'Para consultar o estado do seu pedido, envie e-mail para:\nsuporte@livrariaemsuasmaos.com\ncom o número de encomenda.',
-    cancelamento: 'Cancelamentos são aceites APENAS antes do envio.\nContacto: suporte@livrariaemsuasmaos.com',
-    pagamento: 'Formas de pagamento:\n• Visa / Mastercard\n• American Express\n• MB Way\n• PayPal\n• Transferência Bancária',
-    envio: 'Prazos de envio:\n• Portugal Continental: 2–4 dias\n• Ilhas: 4–7 dias\n• Europa: 5–8 dias\n• Brasil: 10–15 dias\nEnvio grátis acima de 30 €!'
+    pedido: '📦 Estado do Pedido\n\nPara consultar o estado da sua encomenda, envie um e-mail para suporte@livrariaemsuasmaos.com com o número de encomenda (ex: #LIV123456).\n\nTambém pode consultar o e-mail de confirmação que recebeu — contém um link de rastreio.',
+    cancelamento: '❌ Cancelar Encomenda\n\nPode cancelar gratuitamente enquanto o estado for "Em Preparação".\nApós o envio, terá de seguir o processo normal de devolução (30 dias).\n\nPara cancelar, contacte-nos com urgência: suporte@livrariaemsuasmaos.com',
+    pagamento: '💳 Formas de Pagamento\n\n• Visa / Mastercard\n• American Express\n• MB Way\n• PayPal\n• Transferência Bancária\n\nTodos os pagamentos são processados de forma segura e encriptada (SSL).',
+    envio: '🚚 Prazos & Custos de Envio\n\n• Portugal Continental: 2–4 dias úteis (3,99 €)\n• Ilhas: 4–7 dias úteis (6,99 €)\n• Espanha: 3–5 dias úteis (5,99 €)\n• Resto da Europa: 5–8 dias úteis (8,99 €)\n• Brasil: 10–15 dias úteis (12,99 €)\n\n🎉 Envio GRÁTIS em encomendas acima de 30 €!',
+    devolucao: '↩️ Devoluções e Trocas\n\nAceitamos devoluções até 30 dias após a receção, desde que o livro esteja em perfeitas condições.\n\nPara iniciar: envie um e-mail para suporte@livrariaemsuasmaos.com com o número de encomenda e motivo da devolução. Receberá uma autorização (RMA) em 24h.',
+    humano: '🙋 Falar com um Humano\n\nA nossa equipa está disponível:\n• Segunda a Sexta: 9h–18h\n• Sábado: 10h–14h\n\n📧 suporte@livrariaemsuasmaos.com\n📞 +351 210 000 000\n\nResponderemos assim que possível!'
   };
   if (responses[option]) alert(responses[option]);
+}
+
+// --- Pré-visualização de livros por categoria ---
+
+const SHOWCASE_CATEGORIES = [
+  { key: 'romance',   label: '❤️ Romance',              query: 'romance' },
+  { key: 'scifi',     label: '🚀 Ficção Científica',     query: 'ficção científica' },
+  { key: 'historia',  label: '🏛️ História',             query: 'história' },
+  { key: 'tech',      label: '💻 Tecnologia',           query: 'programação informática' },
+  { key: 'filosofia', label: '🧠 Filosofia',            query: 'filosofia' },
+  { key: 'infantil',  label: '🧸 Infantil',             query: 'livros infantis' },
+  { key: 'culinaria', label: '🍳 Culinária',            query: 'culinária receitas' },
+  { key: 'autoajuda', label: '⭐ Autoajuda',            query: 'autoajuda desenvolvimento pessoal' },
+  { key: 'thriller',  label: '🔍 Thriller & Mistério',  query: 'thriller mistério suspense' },
+  { key: 'arte',      label: '🎨 Arte & Design',        query: 'arte design' }
+];
+
+function loadCategoryShowcase() {
+  const container = document.getElementById('categoryShowcase');
+  if (!container) return;
+
+  container.innerHTML = SHOWCASE_CATEGORIES.map(function(cat) {
+    return '<div class="category-showcase">' +
+      '<h3>' + cat.label + ' <a href="categorias.html?cat=' + encodeURIComponent(cat.query) + '">Ver mais →</a></h3>' +
+      '<div class="category-row" id="cat-row-' + cat.key + '"><div class="loading" style="padding:30px;width:100%;">A carregar livros...</div></div>' +
+    '</div>';
+  }).join('');
+
+  SHOWCASE_CATEGORIES.forEach(function(cat) {
+    fetchCategoryBooks(cat);
+  });
+}
+
+async function fetchCategoryBooks(cat) {
+  const row = document.getElementById('cat-row-' + cat.key);
+  if (!row) return;
+
+  try {
+    const url = 'https://www.googleapis.com/books/v1/volumes?q=subject:' + encodeURIComponent(cat.query) +
+      '&maxResults=8&printType=books&orderBy=relevance';
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      row.innerHTML = '<p style="color:#999;padding:10px;">Sem livros disponíveis nesta categoria de momento.</p>';
+      return;
+    }
+
+    row.innerHTML = data.items.map(function(book) {
+      const info = book.volumeInfo || {};
+      const saleInfo = book.saleInfo || {};
+
+      let basePrice = 19.99;
+      let currency = 'EUR';
+      if (saleInfo.saleability === 'FOR_SALE' && saleInfo.listPrice) {
+        basePrice = saleInfo.listPrice.amount;
+        currency = saleInfo.listPrice.currencyCode;
+      }
+
+      const finalPrice = calculateFinalPrice(basePrice);
+      const image = (info.imageLinks && info.imageLinks.thumbnail)
+        ? info.imageLinks.thumbnail.replace('http:', 'https:')
+        : 'https://placehold.co/145x195?text=Sem+Capa';
+      const title = info.title || 'Título desconhecido';
+      const safeTitle = title.replace(/"/g, '&quot;');
+
+      return '<a class="mini-card" href="produto.html?id=' + (book.id || '') + '">' +
+        '<img src="' + image + '" alt="' + safeTitle + '" loading="lazy" onerror="this.src=\'https://placehold.co/145x195?text=Sem+Capa\'">' +
+        '<div class="mini-info">' +
+          '<div class="mini-title">' + title + '</div>' +
+          '<div class="mini-price">' + finalPrice.toFixed(2) + ' ' + currency + '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('');
+  } catch (err) {
+    row.innerHTML = '<p style="color:#999;padding:10px;">Erro ao carregar livros desta categoria.</p>';
+    console.error('Erro showcase categoria ' + cat.key + ':', err);
+  }
 }
 
 // --- Inicialização ---
@@ -220,12 +278,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  const savedMarkup = localStorage.getItem('markupPercentage');
-  if (savedMarkup) {
-    markupPercentage = parseFloat(savedMarkup);
-    const input = document.getElementById('markupRate');
-    if (input) input.value = markupPercentage;
-    const status = document.getElementById('markupStatus');
-    if (status) status.textContent = 'Margem atual: ' + markupPercentage + '%';
-  }
+  loadCategoryShowcase();
 });
