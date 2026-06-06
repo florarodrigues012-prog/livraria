@@ -52,7 +52,32 @@ function calculateFinalPrice(basePrice) {
   return basePrice * (1 + markupPercentage / 100);
 }
 
-// --- Pesquisa de livros (Google Books API) ---
+// --- Pesquisa de livros (Open Library API) ---
+
+const OL_SEARCH_FIELDS = 'title,author_name,cover_i,key,language,first_publish_year,number_of_pages_median,publisher,subject';
+const LANGUAGE_MAP = { pt: 'por', en: 'eng', es: 'spa', fr: 'fre' };
+
+// Gera um preço base estável a partir do identificador do livro (a fonte agregada não fornece preços de venda)
+function syntheticPrice(seed) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) { hash = (hash * 31 + seed.charCodeAt(i)) >>> 0; }
+  return 8 + (hash % 2700) / 100;
+}
+
+function mapOpenLibraryDoc(doc) {
+  const id = (doc.key || '').replace('/works/', '');
+  const title = doc.title || 'Título desconhecido';
+  const author = (doc.author_name || ['Autor desconhecido']).join(', ');
+  const image = doc.cover_i ? ('https://covers.openlibrary.org/b/id/' + doc.cover_i + '-M.jpg') : 'https://placehold.co/200x300?text=Sem+Capa';
+  return {
+    id: id,
+    title: title,
+    author: author,
+    image: image,
+    basePrice: syntheticPrice(id || title),
+    currency: 'EUR'
+  };
+}
 
 async function searchBooks() {
   const searchInput = document.getElementById('searchInput');
@@ -71,19 +96,25 @@ async function searchBooks() {
   container.innerHTML = '<div class="loading">🔍 A pesquisar livros...</div>';
 
   try {
-    let url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(query) + '&maxResults=24&printType=books';
-    if (languageFilter && languageFilter.value) url += '&langRestrict=' + languageFilter.value;
-    if (sortFilter && sortFilter.value === 'newest') url += '&orderBy=newest';
+    let url = 'https://openlibrary.org/search.json?q=' + encodeURIComponent(query) +
+      '&limit=24&fields=' + OL_SEARCH_FIELDS;
+    if (sortFilter && sortFilter.value === 'newest') url += '&sort=new';
 
     const res = await fetch(url);
     const data = await res.json();
+    let docs = data.docs || [];
 
-    if (!data.items || data.items.length === 0) {
+    if (languageFilter && languageFilter.value) {
+      const code = LANGUAGE_MAP[languageFilter.value];
+      docs = docs.filter(function(d) { return (d.language || []).indexOf(code) !== -1; });
+    }
+
+    if (docs.length === 0) {
       container.innerHTML = '<div class="loading">Nenhum livro encontrado para "' + query + '" 😕</div>';
       return;
     }
 
-    displayBooks(data.items);
+    displayBooks(docs.map(mapOpenLibraryDoc));
   } catch (err) {
     container.innerHTML = '<div class="loading">❌ Erro ao pesquisar. Verifique a sua ligação e tente novamente.</div>';
     console.error('Erro API:', err);
@@ -112,44 +143,28 @@ function displayBooks(books) {
   grid.className = 'products-grid';
 
   books.forEach(function(book) {
-    const info = book.volumeInfo || {};
-    const saleInfo = book.saleInfo || {};
-
-    let basePrice = 19.99;
-    let currency = 'EUR';
-    if (saleInfo.saleability === 'FOR_SALE' && saleInfo.listPrice) {
-      basePrice = saleInfo.listPrice.amount;
-      currency = saleInfo.listPrice.currencyCode;
-    }
-
-    const finalPrice = calculateFinalPrice(basePrice);
-    const imageUrl = (info.imageLinks && info.imageLinks.thumbnail)
-      ? info.imageLinks.thumbnail.replace('http:', 'https:')
-      : 'https://placehold.co/200x300?text=Sem+Capa';
-    const title = info.title || 'Título desconhecido';
-    const author = (info.authors || ['Autor desconhecido']).join(', ');
-    const bookId = book.id || '';
+    const finalPrice = calculateFinalPrice(book.basePrice);
 
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    const safeAuthor = author.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    const safeImage = imageUrl.replace(/'/g, "\\'");
+    const safeTitle = book.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const safeAuthor = book.author.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const safeImage = book.image.replace(/'/g, "\\'");
 
     card.innerHTML =
-      '<a href="produto.html?id=' + bookId + '" style="text-decoration:none;color:inherit;">' +
-        '<img src="' + imageUrl + '" alt="' + safeTitle + '" class="product-image"' +
+      '<a href="produto.html?id=' + book.id + '" style="text-decoration:none;color:inherit;">' +
+        '<img src="' + book.image + '" alt="' + safeTitle + '" class="product-image"' +
           ' onerror="this.src=\'https://placehold.co/200x300?text=Sem+Capa\'">' +
       '</a>' +
       '<div class="product-info">' +
-        '<a href="produto.html?id=' + bookId + '" class="product-title" style="text-decoration:none;color:inherit;">' + title + '</a>' +
-        '<div class="product-author">' + author + '</div>' +
+        '<a href="produto.html?id=' + book.id + '" class="product-title" style="text-decoration:none;color:inherit;">' + book.title + '</a>' +
+        '<div class="product-author">' + book.author + '</div>' +
         '<div class="product-price">' +
-          '<span class="final-price">' + finalPrice.toFixed(2) + ' ' + currency + '</span>' +
+          '<span class="final-price">' + finalPrice.toFixed(2) + ' ' + book.currency + '</span>' +
         '</div>' +
         '<button class="add-to-cart"' +
-          ' onclick="addToCart(\'' + safeTitle + '\', ' + finalPrice + ', \'' + currency + '\', \'' + safeAuthor + '\', \'' + safeImage + '\', \'' + bookId + '\')">' +
+          ' onclick="addToCart(\'' + safeTitle + '\', ' + finalPrice + ', \'' + book.currency + '\', \'' + safeAuthor + '\', \'' + safeImage + '\', \'' + book.id + '\')">' +
           '🛒 Adicionar ao Carrinho' +
         '</button>' +
       '</div>';
@@ -186,11 +201,11 @@ const SHOWCASE_CATEGORIES = [
   { key: 'romance',   label: '❤️ Romance',              query: 'romance' },
   { key: 'scifi',     label: '🚀 Ficção Científica',     query: 'ficção científica' },
   { key: 'historia',  label: '🏛️ História',             query: 'história' },
-  { key: 'tech',      label: '💻 Tecnologia',           query: 'programação informática' },
+  { key: 'tech',      label: '💻 Tecnologia',           query: 'programação' },
   { key: 'filosofia', label: '🧠 Filosofia',            query: 'filosofia' },
-  { key: 'infantil',  label: '🧸 Infantil',             query: 'livros infantis' },
+  { key: 'infantil',  label: '🧸 Infantil',             query: 'infantil' },
   { key: 'culinaria', label: '🍳 Culinária',            query: 'culinária receitas' },
-  { key: 'autoajuda', label: '⭐ Autoajuda',            query: 'autoajuda desenvolvimento pessoal' },
+  { key: 'autoajuda', label: '⭐ Autoajuda',            query: 'autoajuda' },
   { key: 'thriller',  label: '🔍 Thriller & Mistério',  query: 'thriller mistério suspense' },
   { key: 'arte',      label: '🎨 Arte & Design',        query: 'arte design' }
 ];
@@ -216,39 +231,26 @@ async function fetchCategoryBooks(cat) {
   if (!row) return;
 
   try {
-    const url = 'https://www.googleapis.com/books/v1/volumes?q=subject:' + encodeURIComponent(cat.query) +
-      '&maxResults=8&printType=books&orderBy=relevance';
+    const url = 'https://openlibrary.org/search.json?q=' + encodeURIComponent(cat.query) +
+      '&limit=8&fields=' + OL_SEARCH_FIELDS;
     const res = await fetch(url);
     const data = await res.json();
+    const docs = data.docs || [];
 
-    if (!data.items || data.items.length === 0) {
+    if (docs.length === 0) {
       row.innerHTML = '<p style="color:#999;padding:10px;">Sem livros disponíveis nesta categoria de momento.</p>';
       return;
     }
 
-    row.innerHTML = data.items.map(function(book) {
-      const info = book.volumeInfo || {};
-      const saleInfo = book.saleInfo || {};
+    row.innerHTML = docs.map(mapOpenLibraryDoc).map(function(book) {
+      const finalPrice = calculateFinalPrice(book.basePrice);
+      const safeTitle = book.title.replace(/"/g, '&quot;');
 
-      let basePrice = 19.99;
-      let currency = 'EUR';
-      if (saleInfo.saleability === 'FOR_SALE' && saleInfo.listPrice) {
-        basePrice = saleInfo.listPrice.amount;
-        currency = saleInfo.listPrice.currencyCode;
-      }
-
-      const finalPrice = calculateFinalPrice(basePrice);
-      const image = (info.imageLinks && info.imageLinks.thumbnail)
-        ? info.imageLinks.thumbnail.replace('http:', 'https:')
-        : 'https://placehold.co/145x195?text=Sem+Capa';
-      const title = info.title || 'Título desconhecido';
-      const safeTitle = title.replace(/"/g, '&quot;');
-
-      return '<a class="mini-card" href="produto.html?id=' + (book.id || '') + '">' +
-        '<img src="' + image + '" alt="' + safeTitle + '" loading="lazy" onerror="this.src=\'https://placehold.co/145x195?text=Sem+Capa\'">' +
+      return '<a class="mini-card" href="produto.html?id=' + book.id + '">' +
+        '<img src="' + book.image + '" alt="' + safeTitle + '" loading="lazy" onerror="this.src=\'https://placehold.co/145x195?text=Sem+Capa\'">' +
         '<div class="mini-info">' +
-          '<div class="mini-title">' + title + '</div>' +
-          '<div class="mini-price">' + finalPrice.toFixed(2) + ' ' + currency + '</div>' +
+          '<div class="mini-title">' + book.title + '</div>' +
+          '<div class="mini-price">' + finalPrice.toFixed(2) + ' ' + book.currency + '</div>' +
         '</div>' +
       '</a>';
     }).join('');

@@ -84,28 +84,36 @@
       }
 
       try {
-        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`);
-        const book = await res.json();
-        const info = book.volumeInfo;
-        const saleInfo = book.saleInfo || {};
+        const searchUrl = 'https://openlibrary.org/search.json?q=' + encodeURIComponent('key:/works/' + bookId) +
+          '&limit=1&fields=' + OL_SEARCH_FIELDS;
+        const res = await fetch(searchUrl);
+        const data = await res.json();
+        const doc = data.docs && data.docs[0];
+        if (!doc) throw new Error('Livro não encontrado');
 
-        let basePrice = 19.99;
-        let currency = 'EUR';
-        if (saleInfo.saleability === 'FOR_SALE' && saleInfo.listPrice) {
-          basePrice = saleInfo.listPrice.amount;
-          currency = saleInfo.listPrice.currencyCode;
-        }
+        let description = 'Sem descrição disponível.';
+        try {
+          const workRes = await fetch('https://openlibrary.org/works/' + bookId + '.json');
+          const work = await workRes.json();
+          if (work.description) {
+            description = typeof work.description === 'string' ? work.description : (work.description.value || description);
+          }
+        } catch (descErr) { /* descrição é opcional */ }
 
-        const finalPrice = basePrice * 1.15;
-        const image = info.imageLinks?.large || info.imageLinks?.thumbnail || 'https://placehold.co/280x400?text=Sem+Capa';
-        const title = info.title || 'Título desconhecido';
-        const authors = (info.authors || ['Autor desconhecido']).join(', ');
-        const description = info.description || 'Sem descrição disponível.';
-        const publisher = info.publisher || 'N/D';
-        const publishedDate = info.publishedDate || 'N/D';
-        const pages = info.pageCount || 'N/D';
-        const categories = (info.categories || ['N/D']).join(', ');
-        const language = info.language === 'pt' ? 'Português' : info.language === 'en' ? 'Inglês' : info.language || 'N/D';
+        const basePrice = syntheticPrice(bookId);
+        const currency = 'EUR';
+        const finalPrice = calculateFinalPrice(basePrice);
+        const image = doc.cover_i ? ('https://covers.openlibrary.org/b/id/' + doc.cover_i + '-L.jpg') : 'https://placehold.co/280x400?text=Sem+Capa';
+        const title = doc.title || 'Título desconhecido';
+        const authors = (doc.author_name || ['Autor desconhecido']).join(', ');
+        const publisher = (doc.publisher && doc.publisher[0]) || 'N/D';
+        const publishedDate = doc.first_publish_year ? String(doc.first_publish_year) : 'N/D';
+        const pages = doc.number_of_pages_median || 'N/D';
+        const categories = (doc.subject || []).slice(0, 3).join(', ') || 'N/D';
+        const langCode = (doc.language && doc.language[0]) || '';
+        const language = langCode === 'por' ? 'Português' : langCode === 'eng' ? 'Inglês' :
+          langCode === 'spa' ? 'Espanhol' : langCode === 'fre' ? 'Francês' : (langCode || 'N/D');
+        const safeDescription = description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
 
         document.getElementById('breadcrumbTitle').textContent = title;
         document.title = title + ' - Livraria em Suas Mãos';
@@ -145,7 +153,6 @@
               <div class="meta-item"><strong>Páginas</strong>${pages}</div>
               <div class="meta-item"><strong>Idioma</strong>${language}</div>
               <div class="meta-item"><strong>Categoria</strong>${categories}</div>
-              <div class="meta-item"><strong>ISBN</strong>${info.industryIdentifiers?.[0]?.identifier || 'N/D'}</div>
             </div>
 
             <div class="tabs">
@@ -153,7 +160,7 @@
               <div class="tab" onclick="showTab('info')">Informações</div>
             </div>
             <div class="tab-content active" id="tab-desc">
-              <p>${description}</p>
+              <p>${safeDescription}</p>
             </div>
             <div class="tab-content" id="tab-info">
               <p><strong>Editora:</strong> ${publisher}</p>
@@ -161,7 +168,7 @@
               <p><strong>Páginas:</strong> ${pages}</p>
               <p><strong>Idioma:</strong> ${language}</p>
               <p><strong>Categoria:</strong> ${categories}</p>
-              <p style="margin-top:12px;color:#999;font-size:0.9em;">Catálogo agregado via Google Books API. Imagens, descrições e dados sujeitos a disponibilidade da fonte.</p>
+              <p style="margin-top:12px;color:#999;font-size:0.9em;">Catálogo agregado a partir de fontes externas. Imagens, descrições e dados sujeitos a disponibilidade da fonte.</p>
             </div>
           </div>`;
       } catch(e) {
