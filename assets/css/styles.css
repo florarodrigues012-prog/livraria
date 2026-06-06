@@ -34,11 +34,7 @@ header {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #F8F6F0;
+  object-fit: contain;
 }
 
 header h1 {
