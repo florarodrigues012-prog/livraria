@@ -26,13 +26,16 @@ header {
 }
 
 .logo-container {
-  max-width: 130px;
+  width: clamp(80px, 20vw, 130px);
   margin: 0 auto 12px;
 }
 
 .logo-container img {
+  display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background: #F8F6F0;
@@ -775,6 +778,15 @@ footer {
 
 /* Responsive */
 @media (max-width: 768px) {
+  header {
+    padding: 16px;
+  }
+
+  .logo-container {
+    width: clamp(64px, 24vw, 100px);
+    margin-bottom: 10px;
+  }
+
   header h1 {
     font-size: 1.6em;
   }
@@ -802,5 +814,24 @@ footer {
 
   .config-row input {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 12px;
+  }
+
+  .logo-container {
+    width: clamp(56px, 28vw, 80px);
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-size: 1.3em;
+  }
+
+  header p {
+    font-size: 0.85em;
   }
 }
